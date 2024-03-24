@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This annex is not released by the Z-Shell team.
+
 <h1 align="center">
   <a href="https://github.com/z-shell/zi">
     <img align="center" src="https://github.com/z-shell/zi/raw/main/docs/images/logo.png" alt="Logo" width="60px" height="60px" />
@@ -32,6 +35,6 @@ This allows builtins and default commands to be aliased while still allowing `\c
 
 ---
 
-> **Note**
+> [!NOTE]
 >
 > This repository compatible with [Zi](https://github.com/z-shell/zi)
