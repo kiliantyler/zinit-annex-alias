@@ -22,12 +22,17 @@ if [[ $PMSPEC != *f* ]] {
 
 # The Proposed Function-Name Prefixes
 # https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html#namespacing
-autoload -Uz .za-alias-{atload,help}-handler
+autoload -Uz .za-alias-{atclone,atload,help}-handler
 
 # An empty stub to fill the help handler fields
 .za-alias-null-handler() { :; }
 
 @zinit-register-annex "zinit-annex-alias" \
+  hook:atclone-50 \
+  .za-alias-atclone-handler \
+  .za-alias-null-handler "alias''" # register a new ice: alias''
+
+@zinit-register-annex "zinit-annex-alias" \
   hook:atload-50 \
   .za-alias-atload-handler \
-  .za-alias-null-handler "alias''" # register a new ice: alias''
+  .za-alias-null-handler

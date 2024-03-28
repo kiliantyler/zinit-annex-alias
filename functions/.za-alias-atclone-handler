@@ -1,0 +1,53 @@
+#autoload
+# -*- mode: zsh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
+# vim: ft=zsh sw=2 ts=2 et
+#
+# Copyright (c) 2021 Z-Shell Community
+
+builtin emulate -L zsh ${=${options[xtrace]:#off}:+-o xtrace}
+builtin setopt extended_glob warn_create_global typeset_silent no_short_loops rc_quotes no_auto_pushd
+
+[[ -z "${ICE[alias]}" ]] && return 1
+[[ -z "${ICE[fbin]}" ]] && [[ -z "${ICE[sbin]}" ]] && return 1
+
+[[ "$1" = plugin ]] &&
+  local type="$1" user="$2" plugin="$3" id_as="$4" dir="$5" ||
+  local type="$1" url="$2" id_as="$3" dir="$4"
+
+local aliases=(${(s/;/)ICE[alias]})
+if (( ${#aliases} > 1 )); then
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}alias{warn} must be a single alias...{rst}" && return 1
+fi
+
+# Getting the bin that we are aliasing
+local -a bins srcdst
+if (( ${+ICE[sbin]} )); then
+  bins=(${(s/;/)ICE[sbin]})
+elif (( ${+ICE[fbin]} )); then
+  bins=(${(s/;/)ICE[fbin]})
+else
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}fbin{warn} or {ice}sbin{warn} must be present...{rst}" && return 1
+fi
+
+if (( ${#bins} > 1 )); then
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}sbin{warn} or {ice}fbin{warn} with multiple bins not supported...{rst}" && return 1
+fi
+
+# Get the alias
+local -a alias
+aliases=(${(s/;/)ICE[alias]})
+
+if (( ${#aliases} > 1 )); then
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}alias{warn} must be a single alias... ($aliases){rst}" && return 1
+fi
+alias="${aliases[1]}"
+
+local bin
+for bin in "$bins"; do
+  srcdst=( ${(@s.->.)bin} )
+  srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
+  srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
+  @zinit-substitute  'srcdst[1]' 'srcdst[2]'
+  local target="${srcdst[2]:-${srcdst[1]:t}}"
+  +zi-log "Setting alias: ${alias} -> ${target}"
+done
