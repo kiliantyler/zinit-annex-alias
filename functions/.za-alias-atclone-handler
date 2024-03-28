@@ -7,8 +7,10 @@
 builtin emulate -L zsh ${=${options[xtrace]:#off}:+-o xtrace}
 builtin setopt extended_glob warn_create_global typeset_silent no_short_loops rc_quotes no_auto_pushd
 
-[[ -z "${ICE[alias]}" ]] && return 1
-[[ -z "${ICE[fbin]}" ]] && [[ -z "${ICE[sbin]}" ]] && return 1
+[[ -z "${ICE[alias]}" ]] && return 0
+[[ -z "${ICE[fbin]}" ]] && [[ -z "${ICE[sbin]}" ]] &&
++zi-log "{annex}alias-annex{ehi}:{rst} {ice}fbin{warn} or {ice}sbin{warn} must be present...{rst}" &&
+return 1
 
 [[ "$1" = plugin ]] &&
   local type="$1" user="$2" plugin="$3" id_as="$4" dir="$5" ||
