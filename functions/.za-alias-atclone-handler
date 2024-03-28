@@ -49,5 +49,5 @@ for bin in "$bins"; do
   srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
   @zinit-substitute  'srcdst[1]' 'srcdst[2]'
   local target="${srcdst[2]:-${srcdst[1]:t}}"
-  +zi-log "Setting alias: ${alias} -> ${target}"
+  +zi-log "{m} {annex}alias{rst}: will set {b}${alias}{rst} -> {g}${target}{rst}"
 done
