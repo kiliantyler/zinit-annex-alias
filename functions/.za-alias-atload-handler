@@ -16,7 +16,7 @@ builtin setopt extended_glob warn_create_global typeset_silent no_short_loops rc
 
 local aliases=(${(s/;/)ICE[alias]})
 if (( ${#aliases} > 1 )); then
-  +zi-message "{annex}alias-annex{ehi}:{rst} {ice}alias{warn} must be a single alias...{rst}" && return 1
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}alias{warn} must be a single alias...{rst}" && return 1
 fi
 
 # Getting the bin that we are aliasing
@@ -26,11 +26,11 @@ if (( ${+ICE[sbin]} )); then
 elif (( ${+ICE[fbin]} )); then
   bins=(${(s/;/)ICE[fbin]})
 else
-  +zi-message "{annex}alias-annex{ehi}:{rst} {ice}fbin{warn} or {ice}sbin{warn} must be present...{rst}" && return 1
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}fbin{warn} or {ice}sbin{warn} must be present...{rst}" && return 1
 fi
 
 if (( ${#bins} > 1 )); then
-  +zi-message "{annex}alias-annex{ehi}:{rst} {ice}sbin{warn} or {ice}fbin{warn} with multiple bins not supported...{rst}" && return 1
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}sbin{warn} or {ice}fbin{warn} with multiple bins not supported...{rst}" && return 1
 fi
 
 # Get the alias
@@ -38,7 +38,7 @@ local -a alias
 aliases=(${(s/;/)ICE[alias]})
 
 if (( ${#aliases} > 1 )); then
-  +zi-message "{annex}alias-annex{ehi}:{rst} {ice}alias{warn} must be a single alias... ($aliases){rst}" && return 1
+  +zi-log "{annex}alias-annex{ehi}:{rst} {ice}alias{warn} must be a single alias... ($aliases){rst}" && return 1
 fi
 alias="${aliases[1]}"
 
@@ -47,7 +47,7 @@ for bin in "$bins"; do
   srcdst=( ${(@s.->.)bin} )
   srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
   srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
-  @zi-substitute  'srcdst[1]' 'srcdst[2]'
+  @zinit-substitute  'srcdst[1]' 'srcdst[2]'
   local target="${srcdst[2]:-${srcdst[1]:t}}"
   builtin alias -- "${alias}"="${target}"
 done
